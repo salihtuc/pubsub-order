@@ -6,7 +6,8 @@ from pymongo import MongoClient
 
 from models import Order, Food, PyObjectId
 import datetime
-import pika
+
+from sqs_try import send_message, receive_message
 
 app = FastAPI()
 
@@ -61,21 +62,12 @@ async def create_order(order: Order):
 
     print(rec.inserted_id)
 
-    message = rec.inserted_id
-
     order.dict().update({'inserted_id': rec.inserted_id})
 
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='localhost'))
-    channel = connection.channel()
-
-    channel.exchange_declare(exchange='logs', exchange_type='fanout')
-
-    channel.basic_publish(exchange='logs', routing_key='', body=message)
-    print(" [x] Sent %r" % message)
-    connection.close()
-
     results = {"order": order}
+
+    send_message(order.json())
+
     return results
 
 
@@ -83,6 +75,11 @@ async def create_order(order: Order):
 async def complete_order(order_id: PyObjectId):
 
     #the_order = col_queue.find_one(filter={"_id": order_id})
+
+    msg = receive_message()
+
+    print(msg)
+
     the_order = col_queue.find_one(filter={})
 
     if the_order is None:
@@ -91,12 +88,16 @@ async def complete_order(order_id: PyObjectId):
     print(the_order)
     print(Order(**the_order))
 
+    return order_id
+
 #    col_queue.delete_one(filter={"_id": order_id})
 
+'''
     print("Deleted")
 
     Order(**the_order).dict().update({"complete_date": str(datetime.datetime.now())})
 
     col_orders.insert_one(Order(**the_order).dict())
+'''
 
-    return order_id
+
