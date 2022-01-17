@@ -66,31 +66,35 @@ async def create_order(order: Order):
 
     results = {"order": order}
 
+    print("Message is sending...")
     send_message(order.json())
 
     return results
 
 
 @app.post("/orders/complete")
-async def complete_order(order_id: PyObjectId):
+async def complete_order():
 
     #the_order = col_queue.find_one(filter={"_id": order_id})
 
     msg = receive_message()
 
+    print("Message Received.")
     print(msg)
 
-    the_order = col_queue.find_one(filter={})
+    #the_order = col_queue.find_one(filter={})
+
+    the_order = Order(**msg)
 
     if the_order is None:
         return None
 
-    print(the_order)
-    print(Order(**the_order))
+    #print(the_order)
+    #print(Order(**the_order))
 
-    return order_id
+    #return order_id
 
-#    col_queue.delete_one(filter={"_id": order_id})
+    col_queue.delete_one(filter={"_id": the_order.dict()["id"]})
 
 '''
     print("Deleted")
