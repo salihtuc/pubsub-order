@@ -1,0 +1,9 @@
+1 - Send request to a random endpoint which does not exist
+2 - Send request to the "/orders" endpoint with POST method
+3 - Send request to the "/orders" endpoint with GET method
+4 - Send request to the "/orders/new" endpoint with GET method
+5 - Send request to the "/orders/new" endpoint with POST method with expected body
+6 - Send request to the "/orders/new" endpoint with POST method with not expected body
+7 - Send request to the "/orders/new" endpoint with POST method with EMPTY body
+8 - Send request to the "/orders/update" endpoint with POST method with expected body (EMPTY)
+9 - Send request to the "/orders/update" endpoint with POST method with not expected body
