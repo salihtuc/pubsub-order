@@ -18,7 +18,7 @@ def receive_message():
     response = sqs_client.receive_message(
         QueueUrl="https://sqs.us-east-1.amazonaws.com/657320242713/OrderQueue",
         MaxNumberOfMessages=1,
-        WaitTimeSeconds=10,
+        WaitTimeSeconds=20,
     )
 
     print(f"Number of messages received: {len(response.get('Messages', []))}")
@@ -35,6 +35,9 @@ def receive_message():
         receipt_handle = message['ReceiptHandle']
 
         break
+
+    if receipt_handle == '' and return_message == '':
+        return None
 
     delete_message(receipt_handle)
 

@@ -4,10 +4,12 @@ from fastapi import FastAPI, Query
 
 from pymongo import MongoClient
 
-from models import Order, Food, PyObjectId
+from models import Order, Food
 import datetime
+import json
+import uvicorn
 
-from sqs_try import send_message, receive_message
+from sqs_utils import send_message, receive_message
 
 app = FastAPI()
 
@@ -31,17 +33,29 @@ col_queue = db["queue"]
 
 
 # TODO: We may add type in str or another endpoint
+# TODO: We may add date interval for filtering
 @app.get("/orders/")
-async def get_orders(t: Optional[int] = Query(-1)):
+async def get_orders(t: Optional[int] = Query(0)):
 
-    if t == -1:
-        orders = [Order(**x) for x in col_orders.find()]
+    # t = 0 -> all
+    # t = -1 -> not completed
+    # t = 1 -> completed
 
-        return {"orders": orders}
+    if t == 0:
+        completed = [Order(**x) for x in col_orders.find()]
+        not_completed = [Order(**x) for x in col_queue.find()]
+
+        return {"orders": {"completed": completed, "not_completed": not_completed}}
+
     elif t == 0:
         orders = [Order(**x) for x in col_queue.find()]
 
-        return {"orders": [o for o in orders if o.status == 'In Progress']}
+        return {"orders": orders}
+
+    elif t == 1:
+        orders = [Order(**x) for x in col_orders.find()]
+
+        return {"orders": orders}
 
 
 @app.get("/foods")
@@ -62,12 +76,17 @@ async def create_order(order: Order):
 
     print(rec.inserted_id)
 
-    order.dict().update({'inserted_id': rec.inserted_id})
+    order_dict = order.dict()
 
-    results = {"order": order}
+    order_dict.update({'_id': rec.inserted_id})
+    order_dict.update({'inserted_id': rec.inserted_id})
+
+    updated_order = Order.parse_obj(order_dict)
+
+    results = {"order": updated_order}
 
     print("Message is sending...")
-    send_message(order.json())
+    send_message(updated_order.json())
 
     return results
 
@@ -75,33 +94,31 @@ async def create_order(order: Order):
 @app.post("/orders/complete")
 async def complete_order():
 
-    #the_order = col_queue.find_one(filter={"_id": order_id})
-
     msg = receive_message()
+
+    if msg is None:
+        err_msg = "Something went wrong when getting the message. Operation failed."
+        print(err_msg)
+        return err_msg
 
     print("Message Received.")
     print(msg)
 
-    #the_order = col_queue.find_one(filter={})
-
-    the_order = Order(**msg)
+    the_order = Order(**json.loads(msg))
 
     if the_order is None:
-        return None
+        return "Failed to get Order object from the message."
 
-    #print(the_order)
-    #print(Order(**the_order))
+    col_queue.delete_one(filter={"_id": the_order.dict()["inserted_id"]})
 
-    #return order_id
-
-    col_queue.delete_one(filter={"_id": the_order.dict()["id"]})
-
-'''
     print("Deleted")
 
-    Order(**the_order).dict().update({"complete_date": str(datetime.datetime.now())})
+    order_dict = the_order.dict()
 
-    col_orders.insert_one(Order(**the_order).dict())
-'''
+    order_dict.update({"complete_date": str(datetime.datetime.now())})
+
+    col_orders.insert_one(order_dict)
 
 
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

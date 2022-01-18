@@ -62,6 +62,8 @@ class Order(BaseModel):
     foods: List[Food]
     user_note: Optional[str] = None
     order_date: Optional[str] = None
+    complete_date: Optional[str] = None
+    inserted_id: Optional[PyObjectId] = None
 
     def __init__(self):
         super()
