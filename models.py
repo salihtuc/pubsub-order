@@ -3,6 +3,7 @@ from bson import ObjectId
 from typing import List, Optional
 
 
+# This class is using for "_id"-like attributes in Mongo. ObjectId(...) representation
 class PyObjectId(ObjectId):
 
     @classmethod
@@ -20,14 +21,7 @@ class PyObjectId(ObjectId):
         field_schema.update(type='string')
 
 
-class Item(BaseModel):
-    name: str
-    description: Optional[str] = None
-    price: float
-    tax: Optional[float] = None
-    tags: List[str] = []
-
-
+# This class is using for representing User collection in Mongo.
 class User(BaseModel):
     id: Optional[PyObjectId] = Field(alias='_id')
     name: str
@@ -40,6 +34,7 @@ class User(BaseModel):
         }
 
 
+# This class is using for representing Food collection in Mongo.
 class Food(BaseModel):
     id: Optional[PyObjectId] = Field(alias='_id')
     restaurant: Optional[PyObjectId]
@@ -55,10 +50,10 @@ class Food(BaseModel):
         }
 
 
+# This class is using for representing Order collection in Mongo.
 class Order(BaseModel):
     id: Optional[PyObjectId] = Field(alias='_id')
     user: User
-    order_date: str
     foods: List[Food]
     user_note: Optional[str] = None
     order_date: Optional[str] = None
@@ -66,7 +61,7 @@ class Order(BaseModel):
     inserted_id: Optional[PyObjectId] = None
 
     def __init__(self):
-        super()
+        super().__init__()
 
     def __init__(self, *a, **kw):
         super().__init__(*a, **kw)

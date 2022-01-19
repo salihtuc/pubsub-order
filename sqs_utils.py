@@ -12,6 +12,8 @@ def send_message(message):
     )
     print(response)
 
+    return response
+
 
 def receive_message():
     sqs_client = boto3.client("sqs", region_name="us-east-1")
