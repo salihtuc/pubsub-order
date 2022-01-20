@@ -81,6 +81,7 @@ async def create_order(order: Order):
     # TODO: Analyze order; is user in the system, is food in the system, etc.
     # NOTE: For now, we are assuming that the order contains correct data.
 
+
     # Insert the order to the queue database in order to prevent data loss.
     rec = col_queue.insert_one(order.dict())
 

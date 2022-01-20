@@ -67,28 +67,59 @@ def test_get_new_order():
 # Test new_order: Send POST to "New" with valid body
 def test_post_order():
     # TODO add true json here
-    response = client.post("/orders/new", json={})
+    simple_input = {
+        "user": {
+            "id": "61e31b1f86d743ba1781db6f",
+            "name": "U\\u011fur \\u00d6zi",
+            "email": "uozy@yspt.com"
+        },
+        "order_date": "2022-01-16 20:11:22.263795",
+        "foods": [
+            {
+                "id": "61e355f32be1ae938189c3b0",
+                "restaurant": "61e31e7139103e5969baa475",
+                "name": "D\\u00f6ner",
+                "category": "61e3556e03f5bac9f7611b1a",
+                "unit_price": 17.5,
+                "count": 1
+            },
+            {
+                "id": "61e355f32be1ae938189c3b2",
+                "restaurant": "61e31e7139103e5969baa475",
+                "name": "Etibol \\u0130skender",
+                "category": "61e3556e03f5bac9f7611b1a",
+                "unit_price": 30.0,
+                "count": 1
+            }
+        ],
+        "user_note": "asd"
+    }
+
+    response = client.post("/orders/new", json=simple_input)
     assert response.status_code == 200
 
     response_json = response.json()
 
     assert "response" in response_json
-    assert "user" in response_json["response"]
-    assert "order_date" in response_json["response"]
-    assert "foods" in response_json["response"]
+    assert "MessageId" in response_json["response"]
+
+
+# Test new_order: Send POST to "New" with empty body
+def test_post_order_with_none_body():
+    response = client.post("/orders/new", json=None)
+    assert response.status_code == 422  # Unprocessable entry
 
 
 # Test new_order: Send POST to "New" with invalid body
 def test_post_order_with_wrong_body():
     response = client.post("/orders/new", json={"foo": "bar"})
-    assert response.status_code == 500  # TODO: Add the response code
+    assert response.status_code == 422  # Unprocessable entry
 
 
 # Test new_order: Send POST to "New" with empty body
 def test_post_order_with_empty_body():
     response = client.post("/orders/new")
-    assert response.status_code == 400
-    assert response.json() == {"error": "Cannot get the input Order from the client."}
+    assert response.status_code == 422  # Unprocessable entry
 
 
 # Test complete_order: Complete order orders
