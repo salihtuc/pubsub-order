@@ -11,6 +11,10 @@ In order to complete these operations, the user can use following API endpoints 
 - POST /orders/new
 - POST /orders/complete
 
+You can run the service using:
+```uvicorn main:app --reload```
+command in a directory, after extracting the content to the directory.
+
 ## GET /orders?[t=<order_type>]
 This endpoint is using in order to get all *completed* and/or *waiting* orders in the system. 
 
