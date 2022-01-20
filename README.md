@@ -24,7 +24,7 @@ This endpoint is using in order to get all *completed* and/or *waiting* orders i
 User can specify a value which is one of the numbers in [-1, 0, 1]
 **0** is the default value for **t**.
 
-####Options (<order_type>)
+**Options (<order_type>)**
 - t = 0
 The default value. It represents all orders (completed + waiting)
 
@@ -110,13 +110,13 @@ This REST endpoint developed with **Fast API** framework in Python.
 We are using **MongoDB** for the database operations and **Amazon SQS** for the queue.
 
 ## Database Collections
-###categories
+1. categories
 It represents food categories.
 
 - _id: ObjectId
 - name: String
 
-###foods
+2. foods
 It represents foods in the system.
 
 - _id: ObjectId
@@ -125,7 +125,7 @@ It represents foods in the system.
 - category: ObjectId
 - restaurant: ObjectId
 
-###orders
+3. orders
 Order object in the system.
 
 - _id: ObjectId
@@ -135,7 +135,7 @@ Order object in the system.
 - user_note: String
 - complete_date: DateString
 
-###queue
+4. queue
 Same as **Order** object, but for incomplete ones just for data-safety purposes. 
 
 - _id: ObjectId
@@ -145,13 +145,13 @@ Same as **Order** object, but for incomplete ones just for data-safety purposes.
 - user_note: String
 - complete_date: DateString
 
-###restaurants
+5. restaurants
 - _id: ObjectId
 - name: String
 - email: String
 - address: String
 
-###users
+6. users
 - _id: ObjectId
 - name: String
 - email: String
