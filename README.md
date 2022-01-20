@@ -110,13 +110,15 @@ This REST endpoint developed with **Fast API** framework in Python.
 We are using **MongoDB** for the database operations and **Amazon SQS** for the queue.
 
 ## Database Collections
-1. categories
+1. **categories**
+
 It represents food categories.
 
 - _id: ObjectId
 - name: String
 
-2. foods
+2. **foods**
+
 It represents foods in the system.
 
 - _id: ObjectId
@@ -125,7 +127,8 @@ It represents foods in the system.
 - category: ObjectId
 - restaurant: ObjectId
 
-3. orders
+3. **orders**
+
 Order object in the system.
 
 - _id: ObjectId
@@ -135,7 +138,8 @@ Order object in the system.
 - user_note: String
 - complete_date: DateString
 
-4. queue
+4. **queue**
+
 Same as **Order** object, but for incomplete ones just for data-safety purposes. 
 
 - _id: ObjectId
@@ -145,13 +149,15 @@ Same as **Order** object, but for incomplete ones just for data-safety purposes.
 - user_note: String
 - complete_date: DateString
 
-5. restaurants
+5. **restaurants**
+
 - _id: ObjectId
 - name: String
 - email: String
 - address: String
 
-6. users
+6. **users**
+
 - _id: ObjectId
 - name: String
 - email: String
