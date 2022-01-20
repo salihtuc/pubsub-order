@@ -19,19 +19,19 @@ command in a directory, after extracting the content to the directory.
 This endpoint is using in order to get all *completed* and/or *waiting* orders in the system. 
 
 ### Parameters
-####1. Order Type (t) (Query Parameter) (Optional)
+1. Order Type (t) (Query Parameter) (Optional)
 **t** is the type of the order. 
 User can specify a value which is one of the numbers in [-1, 0, 1]
 **0** is the default value for **t**.
 
-#####Options (<order_type>)
-######t = 0
+####Options (<order_type>)
+- t = 0
 The default value. It represents all orders (completed + waiting)
 
-######t = 1
+- t = 1
 This value is using for getting *completed* orders.
 
-######t = -1
+- t = -1
 This value is using for getting *waiting* orders.
 
 ## POST /orders/new
