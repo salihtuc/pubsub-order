@@ -72,11 +72,14 @@ async def get_foods():
 async def create_order(order: Order):
 
     if order is None:
-        err_msg = 'Cannot get the input Order from the client.'
-        raise HTTPException(status_code=400, detail=err_msg)
+        err_msg = "Cannot get the input Order from the client."
+        raise HTTPException(status_code=400, detail={"error": err_msg})
 
     print("------->")
     print(order)
+
+    # TODO: Analyze order; is user in the system, is food in the system, etc.
+    # NOTE: For now, we are assuming that the order contains correct data.
 
     # Insert the order to the queue database in order to prevent data loss.
     rec = col_queue.insert_one(order.dict())
@@ -87,7 +90,7 @@ async def create_order(order: Order):
     # Get the order object's dict in order to update the model
     order_dict = order.dict()
 
-    # Updade dict with inserted order id
+    # Update dict with inserted order id
     # _id for setting "id" value.
     order_dict.update({'_id': rec.inserted_id})
 
