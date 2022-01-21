@@ -15,6 +15,8 @@ You can run the service using:
 ```uvicorn main:app --reload```
 command in a directory, after extracting the content to the directory.
 
+For the detailed documentation for demo, you can check out our "Pubsub-order : Simple Order REST Service" document in the repo folder.
+
 ## GET /orders?[t=<order_type>]
 This endpoint is using in order to get all *completed* and/or *waiting* orders in the system. 
 
