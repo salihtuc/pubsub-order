@@ -11,23 +11,29 @@ In order to complete these operations, the user can use following API endpoints 
 - POST /orders/new
 - POST /orders/complete
 
+You can run the service using:
+```uvicorn main:app --reload```
+command in a directory, after extracting the content to the directory.
+
+For the detailed documentation for demo, you can check out our "Pubsub-order : Simple Order REST Service" document in the repo folder.
+
 ## GET /orders?[t=<order_type>]
 This endpoint is using in order to get all *completed* and/or *waiting* orders in the system. 
 
 ### Parameters
-####1. Order Type (t) (Query Parameter) (Optional)
+1. Order Type (t) (Query Parameter) (Optional)
 **t** is the type of the order. 
 User can specify a value which is one of the numbers in [-1, 0, 1]
 **0** is the default value for **t**.
 
-#####Options (<order_type>)
-######t = 0
+**Options (<order_type>)**
+- t = 0
 The default value. It represents all orders (completed + waiting)
 
-######t = 1
+- t = 1
 This value is using for getting *completed* orders.
 
-######t = -1
+- t = -1
 This value is using for getting *waiting* orders.
 
 ## POST /orders/new
@@ -106,13 +112,15 @@ This REST endpoint developed with **Fast API** framework in Python.
 We are using **MongoDB** for the database operations and **Amazon SQS** for the queue.
 
 ## Database Collections
-###categories
+1. **categories**
+
 It represents food categories.
 
 - _id: ObjectId
 - name: String
 
-###foods
+2. **foods**
+
 It represents foods in the system.
 
 - _id: ObjectId
@@ -121,7 +129,8 @@ It represents foods in the system.
 - category: ObjectId
 - restaurant: ObjectId
 
-###orders
+3. **orders**
+
 Order object in the system.
 
 - _id: ObjectId
@@ -131,7 +140,8 @@ Order object in the system.
 - user_note: String
 - complete_date: DateString
 
-###queue
+4. **queue**
+
 Same as **Order** object, but for incomplete ones just for data-safety purposes. 
 
 - _id: ObjectId
@@ -141,13 +151,15 @@ Same as **Order** object, but for incomplete ones just for data-safety purposes.
 - user_note: String
 - complete_date: DateString
 
-###restaurants
+5. **restaurants**
+
 - _id: ObjectId
 - name: String
 - email: String
 - address: String
 
-###users
+6. **users**
+
 - _id: ObjectId
 - name: String
 - email: String
